@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PORT=3001
+      - DB_PATH=/app/data/boardshelf.db
+      - UPCITEMDB_KEY=${UPCITEMDB_KEY:-}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-}
+      - BGG_API_KEY=${BGG_API_KEY:-}
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

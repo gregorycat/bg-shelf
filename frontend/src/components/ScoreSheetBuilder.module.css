@@ -1,0 +1,159 @@
+.builder {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--faint);
+  text-align: center;
+  padding: 12px 0;
+  margin: 0;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--surface-hi);
+  border-bottom: 1px solid var(--border);
+}
+
+.sectionNum {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sectionLabel {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 0;
+}
+.sectionLabel:focus { outline: none; }
+.sectionLabel::placeholder { color: var(--faint); font-weight: 400; }
+
+.fields {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldEmpty {
+  font-size: 12px;
+  color: var(--faint);
+  margin: 0;
+  padding: 4px 0;
+}
+
+.fieldBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fieldDesc {
+  font-size: 11.5px;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--border);
+  padding: 2px 2px 2px 18px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.fieldDesc:focus { outline: none; border-bottom-color: var(--accent); }
+.fieldDesc::placeholder { color: var(--faint); }
+
+.fieldLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.fieldType {
+  width: 110px;
+  flex-shrink: 0;
+  font-size: 12.5px;
+}
+
+.multiplier {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.multSign {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.multInput {
+  width: 54px;
+  font-size: 13px;
+  text-align: right;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+.removeBtn:hover { color: var(--red, #e55); background: color-mix(in srgb, var(--red, #e55) 10%, transparent); }
+
+.addFieldBtn {
+  align-self: flex-start;
+  font-size: 12px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 0;
+  margin-top: 2px;
+}
+.addFieldBtn:hover { text-decoration: underline; }
+
+.addSectionBtn {
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: 1px dashed var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 6px 14px;
+  width: 100%;
+  opacity: 0.8;
+  transition: opacity .15s;
+}
+.addSectionBtn:hover { opacity: 1; }

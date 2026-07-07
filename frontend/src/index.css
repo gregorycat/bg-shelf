@@ -1,0 +1,62 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #0F1219;
+  --surface:    #171D2A;
+  --surface-hi: #1F2840;
+  --border:     #262E45;
+  --accent:     #F0921A;
+  --accent-dim: #B86D10;
+  --green:      #38966A;
+  --red:        #D95840;
+  --purple:     #6678D4;
+  --teal:       #1A7878;
+  --text:       #E6E2D8;
+  --muted:      #7A839A;
+  --faint:      #3A4258;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font: inherit; border: none; background: none; }
+img { max-width: 100%; display: block; }
+input, textarea, select {
+  font: inherit;
+  background: var(--surface-hi);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 12px;
+  outline: none;
+  width: 100%;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: opacity .15s;
+  min-height: 36px;
+}
+.btn:hover { opacity: .85; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-ghost { border: 1px solid var(--border); color: var(--text); }
+.btn-danger { background: var(--red); color: #fff; }
+
+@media (max-width: 768px) {
+  input, textarea, select { min-height: 44px; }
+  .btn { min-height: 44px; padding: 10px 16px; }
+}

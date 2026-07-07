@@ -1,0 +1,232 @@
+/* Break out of Layout.main's 32px padding so hero is full-bleed */
+.page {
+  margin: -32px;
+}
+
+/* ── Hero ─────────────────────────────────────────── */
+.hero {
+  position: relative;
+  height: 380px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center 30%;
+}
+
+.heroAtmos {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 85%, rgba(240,146,26,.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 15%, rgba(60,120,80,.14) 0%, transparent 55%);
+}
+
+.heroVeil {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(15,18,25,.96) 0%,
+    rgba(15,18,25,.75) 30%,
+    rgba(15,18,25,.28) 58%,
+    transparent 80%
+  );
+}
+
+.heroFade {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+  background: linear-gradient(to top, var(--bg), transparent);
+}
+
+.heroContent {
+  position: relative; z-index: 2;
+  padding: 60px 44px 44px;
+  max-width: 500px;
+}
+
+.heroEyebrow {
+  display: flex; gap: 7px; margin-bottom: 12px; flex-wrap: wrap;
+}
+
+.heroTag {
+  font-size: 10px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase;
+  color: rgba(240,146,26,.9); background: rgba(240,146,26,.11);
+  border: 1px solid rgba(240,146,26,.26); border-radius: 3px; padding: 2px 7px;
+}
+
+.heroTitle {
+  font-size: 46px; font-weight: 800; letter-spacing: -.05em; line-height: 1;
+  color: #fff; margin-bottom: 10px;
+  text-shadow: 0 2px 20px rgba(0,0,0,.4);
+  text-wrap: balance;
+}
+
+.heroStats {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+}
+
+.heroRating {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 13px; font-weight: 700; color: var(--accent);
+}
+
+.heroStat { font-size: 12.5px; color: rgba(255,255,255,.52); }
+.heroSep  { color: rgba(255,255,255,.2); }
+
+.heroDesc {
+  font-size: 12.5px; color: rgba(255,255,255,.6); line-height: 1.65;
+  margin-bottom: 20px; max-width: 390px;
+}
+
+.heroBtns { display: flex; gap: 9px; }
+
+.hbtnP {
+  background: var(--accent); color: #000; border: none; border-radius: 7px;
+  padding: 9px 22px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; letter-spacing: -.01em;
+  transition: background .12s;
+}
+.hbtnP:hover { background: var(--accent-dim); }
+
+/* ── Browse rows ───────────────────────────────────── */
+.browse { padding: 4px 0 56px; }
+
+.state {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 32px 32px;
+}
+
+.cat { margin-bottom: 4px; }
+
+.catLabel {
+  padding: 18px 32px 8px;
+  display: flex; align-items: center; gap: 9px;
+  font-size: 11px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+.catLabel::before {
+  content: '';
+  flex-shrink: 0;
+  width: 2px; height: 13px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.row {
+  display: flex; gap: 10px;
+  overflow-x: auto; overflow-y: visible;
+  padding: 6px 32px 20px;
+  scrollbar-width: none;
+}
+.row::-webkit-scrollbar { display: none; }
+
+/* ── Game cards ─────────────────────────────────────── */
+.gc {
+  flex-shrink: 0;
+  width: 144px;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+.gc:hover { z-index: 30; }
+
+.gcInner {
+  border-radius: 7px;
+  overflow: hidden;
+  transform-origin: center bottom;
+  transition: transform .22s cubic-bezier(.18,.8,.28,1), box-shadow .22s;
+}
+.gc:hover .gcInner {
+  transform: scale(1.1) translateY(-6px);
+  box-shadow: 0 18px 52px rgba(0,0,0,.72), 0 0 0 1px rgba(240,146,26,.22);
+}
+
+.gcCover {
+  position: relative;
+  width: 144px; height: 202px;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.gcImg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* light sheen for gradient cards */
+.gcSheen {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.09) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* bottom-fade for gradient cards */
+.gcCover::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,.4));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gcAbbr {
+  font-size: 30px; font-weight: 800; letter-spacing: -.04em;
+  color: rgba(255,255,255,.78); z-index: 2;
+  text-shadow: 0 2px 14px rgba(0,0,0,.5);
+}
+
+.gcBadge {
+  position: absolute; top: 7px; left: 7px; z-index: 4;
+  font-size: 9px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 3px;
+}
+.bl { background: var(--red);    color: #fff; }
+.bw { background: var(--purple); color: #fff; }
+
+/* hover overlay */
+.gcOv {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+  background: linear-gradient(to top, rgba(0,0,0,.92) 0%, rgba(0,0,0,.5) 55%, transparent 100%);
+  padding: 26px 10px 10px;
+  opacity: 0; transition: opacity .16s;
+}
+.gc:hover .gcOv { opacity: 1; }
+
+.gcOvRating {
+  font-size: 11px; font-weight: 700; color: var(--accent);
+  display: flex; align-items: center; gap: 3px; margin-bottom: 3px;
+}
+
+.gcOvMeta {
+  font-size: 10.5px; color: rgba(255,255,255,.66);
+  margin-bottom: 8px; line-height: 1.4;
+}
+
+.gcOvBtn {
+  display: inline-flex; background: var(--accent); color: #000;
+  border: none; border-radius: 4px; padding: 4px 9px;
+  font-size: 10.5px; font-weight: 700; cursor: pointer; font-family: inherit;
+  letter-spacing: -.01em;
+}
+
+/* card label */
+.gcFoot { padding: 6px 4px 2px; }
+
+.gcTitle {
+  font-size: 12px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 1px;
+}
+
+.gcYear { font-size: 11px; color: var(--muted); }
+
+@media (max-width: 768px) {
+  .page { margin: -16px; }
+  .hero { height: 280px; }
+  .heroContent { padding: 32px 20px 28px; }
+  .heroTitle { font-size: 30px; }
+  .heroDesc { display: none; }
+  .catLabel { padding-left: 16px; padding-right: 16px; }
+  .row { padding-left: 16px; padding-right: 16px; }
+  .state { padding-left: 16px; padding-right: 16px; }
+}

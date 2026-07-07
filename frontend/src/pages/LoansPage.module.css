@@ -1,0 +1,44 @@
+.page { max-width: 700px; }
+
+.title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+
+.banner {
+  background: rgba(217, 88, 64, .15);
+  border: 1px solid var(--red);
+  color: var(--red);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  margin-bottom: 20px;
+}
+
+.list { display: flex; flex-direction: column; gap: 10px; }
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.late { border-color: var(--red); }
+
+.thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.info { flex: 1; min-width: 0; }
+
+.gameTitle { font-weight: 600; font-size: 14px; }
+.friendName { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.date { font-size: 12px; color: var(--faint); margin-top: 3px; }
+.lateTag { color: var(--red); font-weight: 600; }
+
+.state { color: var(--muted); padding: 40px 0; text-align: center; }

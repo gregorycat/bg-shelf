@@ -122,8 +122,8 @@ router.post('/', (req, res) => {
     rest.year_published || null, rest.thumbnail_url || null, rest.image_url || null,
     rest.min_players || null, rest.max_players || null, rest.playing_time || null,
     rest.bgg_rating || null,
-    rest.categories ? JSON.stringify(rest.categories) : null,
-    rest.mechanics  ? JSON.stringify(rest.mechanics)  : null,
+    rest.categories ? (Array.isArray(rest.categories) ? JSON.stringify(rest.categories) : rest.categories) : null,
+    rest.mechanics  ? (Array.isArray(rest.mechanics)  ? JSON.stringify(rest.mechanics)  : rest.mechanics)  : null,
     rest.description || null, notes || null,
     status || 'owned', bgg_type || 'boardgame', parent_game_id || null, ean || null,
   )

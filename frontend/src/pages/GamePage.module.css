@@ -407,6 +407,13 @@
   padding: 4px 4px;
 }
 
+.sheetMultiplierInput {
+  width: 38px;
+  font-size: 11px;
+  text-align: center;
+  padding: 1px 3px;
+}
+
 .sheetCheckInput {
   width: 20px;
   height: 20px;

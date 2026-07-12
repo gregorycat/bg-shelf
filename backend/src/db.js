@@ -114,5 +114,8 @@ export function initDb() {
   // Migrate play_players if needed
   try { db.exec('ALTER TABLE play_players ADD COLUMN score_data TEXT') } catch {}
 
+  // Per-play override of each number field's multiplier (JSON: { [fieldId]: multiplier })
+  try { db.exec('ALTER TABLE plays ADD COLUMN field_multipliers TEXT') } catch {}
+
   console.log(`Database ready at ${DB_PATH}`)
 }

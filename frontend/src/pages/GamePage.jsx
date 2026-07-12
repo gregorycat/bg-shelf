@@ -55,6 +55,7 @@ export default function GamePage() {
   const [playNotes, setPlayNotes] = useState('')
   const [playPlayers, setPlayPlayers] = useState([{ ...EMPTY_PLAYER }])
   const [playExpansionIds, setPlayExpansionIds] = useState([])
+  const [fieldMultipliers, setFieldMultipliers] = useState({})
   const [playSaving, setPlaySaving] = useState(false)
   const [editingPlayId, setEditingPlayId] = useState(null)
 
@@ -311,6 +312,7 @@ export default function GamePage() {
     setPlayNotes('')
     setPlayPlayers([{ ...EMPTY_PLAYER }])
     setPlayExpansionIds([])
+    setFieldMultipliers({})
   }
 
   function startEditPlay(play) {
@@ -329,15 +331,16 @@ export default function GamePage() {
         : [{ ...EMPTY_PLAYER }]
     )
     setPlayExpansionIds((play.expansions || []).map(e => e.id))
+    setFieldMultipliers(play.field_multipliers ? JSON.parse(play.field_multipliers) : {})
     setShowAddPlay(true)
   }
 
-  function computeTotal(player, sections) {
+  function computeTotal(player, sections, multiplierOverrides = {}) {
     let total = 0
     for (const sec of sections) {
       for (const f of sec.fields) {
         const raw = player.score_data?.[f.id]
-        if (f.type === 'number') total += (parseFloat(raw) || 0) * (f.multiplier || 1)
+        if (f.type === 'number') total += (parseFloat(raw) || 0) * (multiplierOverrides[f.id] ?? f.multiplier ?? 1)
         else if (f.type === 'checkbox') total += raw ? (f.points || 0) : 0
       }
     }
@@ -366,7 +369,7 @@ export default function GamePage() {
         notes: playNotes || null,
         players: validPlayers.map(p => {
           const score = playTemplate
-            ? computeTotal(p, playTemplate.sections)
+            ? computeTotal(p, playTemplate.sections, fieldMultipliers)
             : (p.score !== '' ? Number(p.score) : null)
           return {
             player_name: p.player_name.trim(),
@@ -376,6 +379,7 @@ export default function GamePage() {
           }
         }),
         expansion_ids: playExpansionIds,
+        field_multipliers: playTemplate ? fieldMultipliers : null,
       }
       if (editingPlayId) {
         const updatedPlay = await playsApi.update(editingPlayId, payload)
@@ -804,8 +808,17 @@ export default function GamePage() {
                           <div key={field.id} className={styles.sheetRow}>
                             <div className={styles.sheetFieldCol}>
                               <span className={styles.sheetFieldName}>{field.label || '—'}</span>
-                              {field.type === 'number' && (field.multiplier || 1) !== 1 && (
-                                <span className={styles.sheetFieldMeta}>×{field.multiplier}</span>
+                              {field.type === 'number' && (
+                                <span className={styles.sheetFieldMeta}>
+                                  ×<input
+                                    type="number"
+                                    step="0.1"
+                                    className={styles.sheetMultiplierInput}
+                                    value={fieldMultipliers[field.id] ?? field.multiplier ?? 1}
+                                    onChange={e => setFieldMultipliers(prev => ({ ...prev, [field.id]: Number(e.target.value) }))}
+                                    title="Multiplicateur pour cette partie"
+                                  />
+                                </span>
                               )}
                               {field.type === 'checkbox' && (
                                 <span className={styles.sheetFieldMeta}>{field.points || 0} pts</span>
@@ -847,7 +860,7 @@ export default function GamePage() {
                       </div>
                       {playPlayers.map((p, i) => (
                         <div key={i} className={`${styles.sheetPlayerCol} ${styles.sheetTotalCell}`}>
-                          {computeTotal(p, playTemplate.sections)}
+                          {computeTotal(p, playTemplate.sections, fieldMultipliers)}
                         </div>
                       ))}
                       <div className={styles.sheetAddCol} />

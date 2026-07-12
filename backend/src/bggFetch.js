@@ -46,6 +46,20 @@ export async function bggSearch(query) {
   }))
 }
 
+// Fetches thumbnails for many ids in a single XML API2 request — used to illustrate search
+// results without doing one internal-API request per result (see fetchGeekItem below).
+export async function bggThumbnails(bggIds) {
+  if (!bggIds.length) return {}
+  const url = `${BGG_BASE}/thing?id=${bggIds.join(',')}`
+  const data = await bggFetch(url)
+  const items = data?.items?.item || []
+  const map = {}
+  for (const item of items) {
+    map[item.$.id] = item.thumbnail?.[0]?.trim() || null
+  }
+  return map
+}
+
 // ── BGG internal JSON API — works without Bearer token, one request per game ──
 
 function parseGeekItem(item) {

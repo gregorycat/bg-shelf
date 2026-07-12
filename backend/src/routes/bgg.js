@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import fetch from 'node-fetch'
 import { getDb } from '../db.js'
-import { bggSearch, bggThing, bggThingBatch, bggCollection, bggCollectionRemove } from '../bggFetch.js'
+import { bggSearch, bggThing, bggThingBatch, bggThumbnails, bggCollection, bggCollectionRemove } from '../bggFetch.js'
 import { bggLogin, bggLogout, getBggLoginStatus } from '../bggAuth.js'
 
 const router = Router()
@@ -10,7 +10,7 @@ function localSearch(q) {
   const db = getDb()
   const term = `%${q.replace(/[%_]/g, '\\$&')}%`
   return db.prepare(`
-    SELECT bgg_id, title, year_published, bgg_type
+    SELECT bgg_id, title, year_published, bgg_type, thumbnail_url
     FROM games
     WHERE title LIKE ? ESCAPE '\\'
     ORDER BY
@@ -46,7 +46,14 @@ router.get('/search', async (req, res) => {
   }
 
   try {
-    res.json(await bggSearch(q))
+    const results = await bggSearch(q)
+    try {
+      const thumbs = await bggThumbnails(results.slice(0, 40).map(r => r.bgg_id))
+      for (const r of results) r.thumbnail_url = thumbs[r.bgg_id] || null
+    } catch {
+      // Thumbnails are a nice-to-have — don't fail the whole search over this sub-request
+    }
+    res.json(results)
   } catch (err) {
     if (err.message.includes('401') || err.message.includes('session') || err.message.includes('HTTP 4')) {
       const results = localSearch(q)

@@ -255,6 +255,43 @@ export async function bggCollectionRemove(collid) {
   }
 }
 
+// Marks a game as owned in the logged-in user's BGG collection. Uses BGG's internal (undocumented)
+// collection editor endpoint — same one the site's own "Own this" checkbox posts to.
+export async function bggCollectionAdd(bggId) {
+  const cookies = getBggCookies()
+  if (!cookies) return null
+
+  const body = new URLSearchParams({
+    action: 'savedata',
+    fieldname: 'status',
+    objecttype: 'thing',
+    objectid: String(bggId),
+    collid: '',
+    own: '1',
+    ajax: '1',
+  })
+
+  const res = await fetch('https://boardgamegeek.com/geekcollection.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Cookie': cookies,
+      'User-Agent': 'Mozilla/5.0 BoardShelf/1.0',
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    body: body.toString(),
+  })
+
+  if (res.status === 401) throw new Error('BGG session expirée — reconnectez-vous')
+  if (!res.ok) throw new Error(`BGG HTTP ${res.status}`)
+
+  const text = await res.text()
+  if (text.includes('You must') && text.includes('login')) {
+    throw new Error('BGG session expirée — reconnectez-vous')
+  }
+  return text
+}
+
 export async function bggHot() {
   const url = `${BGG_BASE}/hot?type=boardgame`
   const data = await bggFetch(url)

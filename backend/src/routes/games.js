@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { getDb } from '../db.js'
-import { bggThing, bggThingBatch, bggHowToPlay } from '../bggFetch.js'
+import { bggThing, bggThingBatch, bggHowToPlay, bggCollectionAdd } from '../bggFetch.js'
 
 const router = Router()
 
@@ -106,10 +106,12 @@ router.get('/:id', (req, res) => {
   res.json(game)
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const db = getDb()
   const { bgg_id, title, status, bgg_type, parent_game_id, notes, ean, ...rest } = req.body
   if (!title) return res.status(400).json({ error: 'title is required' })
+
+  const resolvedStatus = status || 'owned'
 
   const result = db.prepare(`
     INSERT INTO games
@@ -125,8 +127,15 @@ router.post('/', (req, res) => {
     rest.categories ? (Array.isArray(rest.categories) ? JSON.stringify(rest.categories) : rest.categories) : null,
     rest.mechanics  ? (Array.isArray(rest.mechanics)  ? JSON.stringify(rest.mechanics)  : rest.mechanics)  : null,
     rest.description || null, notes || null,
-    status || 'owned', bgg_type || 'boardgame', parent_game_id || null, ean || null,
+    resolvedStatus, bgg_type || 'boardgame', parent_game_id || null, ean || null,
   )
+
+  // Best-effort: also mark it owned in the user's real BGG collection. Never fails the request —
+  // this is a nice-to-have sync, not a requirement for the local add to succeed.
+  if (bgg_id && resolvedStatus === 'owned') {
+    try { await bggCollectionAdd(bgg_id) } catch (err) { console.warn('BGG collection sync failed:', err.message) }
+  }
+
   res.status(201).json(db.prepare('SELECT * FROM games WHERE rowid = ?').get(result.lastInsertRowid))
 })
 

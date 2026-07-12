@@ -1,6 +1,21 @@
 import axios from 'axios'
+import { useAuthStore } from '../stores/useAuthStore.js'
 
 const api = axios.create({ baseURL: '/api' })
+
+api.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().idToken
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) useAuthStore.getState().logout()
+    return Promise.reject(err)
+  }
+)
 
 export const games = {
   list: (params) => api.get('/games', { params }).then(r => r.data),
@@ -14,7 +29,7 @@ export const games = {
   generateStrategyGuide: (id) => api.post(`/games/${id}/strategy-guide/generate`).then(r => r.data),
   pick: (prompt, exclude = []) => api.post('/games/pick', { prompt, exclude }).then(r => r.data),
   // Returns an EventSource — caller must close it
-  refreshAll: () => new EventSource('/api/games/refresh-all'),
+  refreshAll: () => new EventSource(`/api/games/refresh-all?token=${useAuthStore.getState().idToken}`),
 }
 
 export const friends = {
@@ -35,7 +50,7 @@ export const bgg = {
   search: (q) => api.get('/bgg/search', { params: { q } }).then(r => r.data),
   game: (bggId) => api.get(`/bgg/game/${bggId}`).then(r => r.data),
   barcode: (upc) => api.post('/bgg/barcode', { upc }).then(r => r.data),
-  syncStream: (username, mode) => new EventSource(`/api/bgg/sync?${new URLSearchParams({ username, mode })}`),
+  syncStream: (username, mode) => new EventSource(`/api/bgg/sync?${new URLSearchParams({ username, mode, token: useAuthStore.getState().idToken })}`),
   removeFromCollection: (bggId) => api.delete(`/bgg/collection/${bggId}`).then(r => r.data),
   getSession: () => api.get('/bgg/session').then(r => r.data),
   login: (username, password) => api.post('/bgg/session', { username, password }).then(r => r.data),

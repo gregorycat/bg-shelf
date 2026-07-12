@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useBggStore } from '../stores/useBggStore.js'
+import { useAuthStore } from '../stores/useAuthStore.js'
 import SyncBggModal from './SyncBggModal.jsx'
 import styles from './Layout.module.css'
 
@@ -15,6 +16,7 @@ const nav = [
 
 export default function Layout() {
   const { loggedIn, username, loading, fetchSession } = useBggStore()
+  const { user, logout } = useAuthStore()
   const [showBgg, setShowBgg] = useState(false)
 
   useEffect(() => { fetchSession() }, [])
@@ -44,6 +46,11 @@ export default function Layout() {
               <span className={`${styles.dot} ${loggedIn ? styles.dotGreen : styles.dotGray}`} />
               <span className={styles.bggLabel}>{loggedIn ? username : 'Connexion BGG'}</span>
             </button>
+            {user && (
+              <button className={styles.bggStatus} onClick={logout} title={user.email}>
+                <span className={styles.bggLabel}>Déconnexion ({user.name?.split(' ')[0] || user.email})</span>
+              </button>
+            )}
           </div>
         )}
       </aside>

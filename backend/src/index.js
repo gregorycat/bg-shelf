@@ -4,6 +4,7 @@ import path from 'path'
 import { existsSync } from 'fs'
 import { initDb } from './db.js'
 import { autoLogin } from './bggAuth.js'
+import { requireGoogleAuth } from './middleware/auth.js'
 import gamesRouter from './routes/games.js'
 import friendsRouter from './routes/friends.js'
 import loansRouter from './routes/loans.js'
@@ -20,7 +21,7 @@ app.use(express.json())
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   if (req.method === 'OPTIONS') return res.sendStatus(204)
   next()
 })
@@ -28,14 +29,16 @@ app.use((req, res, next) => {
 initDb()
 autoLogin()
 
+app.get('/api/health', (_req, res) => res.json({ ok: true }))
+
+app.use('/api', requireGoogleAuth)
+
 app.use('/api/games', gamesRouter)
 app.use('/api/friends', friendsRouter)
 app.use('/api/loans', loansRouter)
 app.use('/api/bgg', bggRouter)
 app.use('/api/recommendations', recommendationsRouter)
 app.use('/api/plays', playsRouter)
-
-app.get('/api/health', (_req, res) => res.json({ ok: true }))
 
 // Serve built frontend (production / mobile access)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))

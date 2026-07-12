@@ -1,8 +1,16 @@
+import { fileURLToPath } from 'url'
+import path from 'path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 export default defineConfig({
+  // Read the repo-root .env (shared with the backend) instead of frontend/.env
+  envDir: path.resolve(__dirname, '..'),
+  // Expose GOOGLE_CLIENT_ID (not a secret) to the client in addition to the usual VITE_ prefix
+  envPrefix: ['VITE_', 'GOOGLE_'],
   plugins: [
     react(),
     VitePWA({

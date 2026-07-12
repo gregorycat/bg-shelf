@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLibraryStore } from '../stores/useLibraryStore.js'
+import { parseJsonArray } from '../utils/json.js'
 import styles from './BrowsePage.module.css'
-
-const parseArr = s => { try { return JSON.parse(s) } catch { return [] } }
 
 function strHash(s) {
   let h = 5381
@@ -25,8 +24,8 @@ function buildCategories(games) {
   const main    = games.filter(g => g.bgg_type === 'boardgame')
   const owned   = main.filter(g => g.status !== 'wishlist')
 
-  const hasMech = (g, term) => parseArr(g.mechanics).some(m => m.toLowerCase().includes(term))
-  const hasCat  = (g, term) => parseArr(g.categories).some(c => c.toLowerCase().includes(term))
+  const hasMech = (g, term) => parseJsonArray(g.mechanics).some(m => m.toLowerCase().includes(term))
+  const hasCat  = (g, term) => parseJsonArray(g.categories).some(c => c.toLowerCase().includes(term))
 
   return [
     {
@@ -146,7 +145,7 @@ export default function BrowsePage() {
     .filter(g => g.status !== 'wishlist')
     .sort((a, b) => (b.bgg_rating ?? 0) - (a.bgg_rating ?? 0))[0]
 
-  const heroTags = hero ? parseArr(hero.categories).slice(0, 3) : []
+  const heroTags = hero ? parseJsonArray(hero.categories).slice(0, 3) : []
   const heroHue  = hero ? gameHue(hero.title) : 150
   const players  = hero ? playerRange(hero) : null
 

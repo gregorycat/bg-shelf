@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { games as gamesApi } from '../services/api.js'
+import { parseJsonArray } from '../utils/json.js'
 import styles from './GamePickerPage.module.css'
 
 const SUGGESTIONS = [
@@ -54,7 +55,7 @@ export default function GamePickerPage() {
   const game = result?.game
   const reason = result?.reason
 
-  const categories = game?.categories ? (() => { try { return JSON.parse(game.categories) } catch { return [] } })() : []
+  const categories = parseJsonArray(game?.categories)
   const players = game?.min_players && game?.max_players
     ? game.min_players === game.max_players ? `${game.min_players} joueurs` : `${game.min_players}–${game.max_players} joueurs`
     : null

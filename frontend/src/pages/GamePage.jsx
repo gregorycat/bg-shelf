@@ -5,6 +5,7 @@ import { useLibraryStore } from '../stores/useLibraryStore.js'
 import { useBggStore } from '../stores/useBggStore.js'
 import { games as gamesApi, loans as loansApi, friends as friendsApi, plays as playsApi, bgg as bggApi } from '../services/api.js'
 import ScoreSheetBuilder from '../components/ScoreSheetBuilder.jsx'
+import { parseJsonArray } from '../utils/json.js'
 import styles from './GamePage.module.css'
 
 marked.setOptions({ breaks: true })
@@ -116,11 +117,11 @@ export default function GamePage() {
   if (games.length === 0) return <p style={{ color: 'var(--muted)', padding: 40 }}>Chargement…</p>
   if (!game) return <p style={{ color: 'var(--muted)', padding: 40 }}>Jeu introuvable.</p>
 
-  const categories  = game.categories  ? JSON.parse(game.categories)  : []
-  const mechanics   = game.mechanics   ? JSON.parse(game.mechanics)   : []
-  const designers   = game.designers   ? JSON.parse(game.designers)   : []
-  const publishers  = game.publishers  ? JSON.parse(game.publishers)  : []
-  const artists     = game.artists     ? JSON.parse(game.artists)     : []
+  const categories  = parseJsonArray(game.categories)
+  const mechanics   = parseJsonArray(game.mechanics)
+  const designers   = parseJsonArray(game.designers)
+  const publishers  = parseJsonArray(game.publishers)
+  const artists     = parseJsonArray(game.artists)
   const extensions  = games.filter(g => g.parent_game_id === id)
 
   // Merge the base game's score sheet with any checked expansions' own score sheets,
@@ -161,8 +162,8 @@ export default function GamePage() {
       .filter(g => g.id !== id && g.bgg_type !== 'boardgameexpansion' && g.parent_game_id !== id)
       .map(g => {
         let score = 0
-        const gCats = g.categories ? JSON.parse(g.categories) : []
-        const gMechs = g.mechanics ? JSON.parse(g.mechanics) : []
+        const gCats = parseJsonArray(g.categories)
+        const gMechs = parseJsonArray(g.mechanics)
         for (const c of gCats) if (catSet.has(c)) score += 2
         for (const m of gMechs) if (mechSet.has(m)) score += 1.5
         if (game.min_players && g.min_players && game.max_players && g.max_players) {

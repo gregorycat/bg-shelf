@@ -4,6 +4,7 @@ import GameCard from '../components/GameCard.jsx'
 import AddGameModal from '../components/AddGameModal.jsx'
 import SyncBggModal from '../components/SyncBggModal.jsx'
 import BulkRefreshModal from '../components/BulkRefreshModal.jsx'
+import { parseJsonArray } from '../utils/json.js'
 import styles from './LibraryPage.module.css'
 
 const STATUS_FILTERS = [
@@ -36,10 +37,6 @@ const SORT_OPTS = [
   { value: 'playtime', label: 'Durée croissante' },
 ]
 
-function parseJson(str) {
-  try { return JSON.parse(str || '[]') } catch { return [] }
-}
-
 export default function LibraryPage() {
   const { fetch, games, loading, error, filter, setFilter, search, setSearch } = useLibraryStore()
   const [showAdd, setShowAdd] = useState(false)
@@ -56,7 +53,7 @@ export default function LibraryPage() {
 
   const allCategories = useMemo(() => {
     const set = new Set()
-    games.forEach(g => parseJson(g.categories).forEach(c => set.add(c)))
+    games.forEach(g => parseJsonArray(g.categories).forEach(c => set.add(c)))
     return [...set].sort()
   }, [games])
 
@@ -107,7 +104,7 @@ export default function LibraryPage() {
   }
 
   if (category) {
-    visible = visible.filter(g => parseJson(g.categories).includes(category))
+    visible = visible.filter(g => parseJsonArray(g.categories).includes(category))
   }
 
   // ── Sorting ────────────────────────────────────────────────────────────────

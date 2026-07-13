@@ -75,23 +75,26 @@ export default function ScoreSheetBuilder({ value, onChange }) {
                   >
                     <option value="number">Nombre</option>
                     <option value="checkbox">Case à cocher</option>
+                    <option value="product">Compteur × Compteur</option>
                   </select>
-                  <div className={styles.multiplier}>
-                    <span className={styles.multSign}>×</span>
-                    <input
-                      className={styles.multInput}
-                      type="number"
-                      step="0.5"
-                      value={field.type === 'checkbox' ? (field.points ?? 1) : (field.multiplier ?? 1)}
-                      onChange={e => {
-                        const v = parseFloat(e.target.value) || 1
-                        updateField(sec.id, field.id,
-                          field.type === 'checkbox' ? { points: v } : { multiplier: v }
-                        )
-                      }}
-                      title={field.type === 'checkbox' ? 'Points si coché' : 'Multiplicateur'}
-                    />
-                  </div>
+                  {field.type !== 'product' && (
+                    <div className={styles.multiplier}>
+                      <span className={styles.multSign}>×</span>
+                      <input
+                        className={styles.multInput}
+                        type="number"
+                        step="0.5"
+                        value={field.type === 'checkbox' ? (field.points ?? 1) : (field.multiplier ?? 1)}
+                        onChange={e => {
+                          const v = parseFloat(e.target.value) || 1
+                          updateField(sec.id, field.id,
+                            field.type === 'checkbox' ? { points: v } : { multiplier: v }
+                          )
+                        }}
+                        title={field.type === 'checkbox' ? 'Points si coché' : 'Multiplicateur'}
+                      />
+                    </div>
+                  )}
                   <button className={styles.removeBtn} onClick={() => removeField(sec.id, field.id)} title="Supprimer">✕</button>
                 </div>
                 <input

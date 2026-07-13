@@ -305,7 +305,7 @@
 .sheetTable {
   display: flex;
   flex-direction: column;
-  min-width: 380px;
+  min-width: 420px;
 }
 
 .sheetHeaderRow {
@@ -314,7 +314,7 @@
   background: var(--surface-hi);
   border-bottom: 1px solid var(--border);
   padding: 8px 10px;
-  gap: 6px;
+  gap: 8px;
 }
 
 .sheetSectionRow {
@@ -332,8 +332,8 @@
 .sheetRow {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
+  gap: 8px;
+  padding: 6px 10px;
   border-top: 1px solid var(--border);
 }
 
@@ -343,10 +343,18 @@
 }
 
 .sheetFieldCol {
-  flex: 0 0 130px;
+  flex: 1 1 150px;
+  min-width: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sheetFieldNameRow {
   display: flex;
   align-items: baseline;
   gap: 5px;
+  flex-wrap: wrap;
 }
 
 .sheetFieldName {
@@ -371,7 +379,8 @@
 }
 
 .sheetPlayerCol {
-  flex: 0 0 80px;
+  flex: 0 0 100px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -407,11 +416,36 @@
   padding: 4px 4px;
 }
 
-.sheetMultiplierInput {
+.productCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.productInputs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sheetProductInput {
   width: 38px;
-  font-size: 11px;
+  font-size: 12.5px;
   text-align: center;
-  padding: 1px 3px;
+  padding: 4px 2px;
+}
+
+.productSign {
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.productTotal {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
 }
 
 .sheetCheckInput {

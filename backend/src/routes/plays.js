@@ -67,15 +67,15 @@ router.get('/recent', (req, res) => {
 
 router.post('/', (req, res) => {
   const db = getDb()
-  const { game_id, played_at, duration_min, notes, players = [], expansion_ids = [], field_multipliers } = req.body
+  const { game_id, played_at, duration_min, notes, players = [], expansion_ids = [] } = req.body
   if (!game_id || !played_at) return res.status(400).json({ error: 'game_id and played_at are required' })
   if (!db.prepare('SELECT id FROM games WHERE id = ?').get(game_id)) {
     return res.status(404).json({ error: 'Game not found' })
   }
 
   const result = db.prepare(`
-    INSERT INTO plays (game_id, played_at, duration_min, notes, field_multipliers) VALUES (?,?,?,?,?)
-  `).run(game_id, played_at, duration_min || null, notes || null, field_multipliers ? JSON.stringify(field_multipliers) : null)
+    INSERT INTO plays (game_id, played_at, duration_min, notes) VALUES (?,?,?,?)
+  `).run(game_id, played_at, duration_min || null, notes || null)
 
   const play = db.prepare('SELECT rowid, * FROM plays WHERE rowid = ?').get(result.lastInsertRowid)
 
@@ -106,7 +106,7 @@ router.put('/:id', (req, res) => {
     return res.status(404).json({ error: 'Play not found' })
   }
 
-  const { played_at, duration_min, notes, players = [], expansion_ids = [], field_multipliers } = req.body
+  const { played_at, duration_min, notes, players = [], expansion_ids = [] } = req.body
   if (!played_at) return res.status(400).json({ error: 'played_at is required' })
 
   const insertPlayer = db.prepare(`
@@ -116,8 +116,8 @@ router.put('/:id', (req, res) => {
     INSERT INTO play_expansions (play_id, expansion_id) VALUES (?,?)
   `)
   db.transaction(() => {
-    db.prepare('UPDATE plays SET played_at = ?, duration_min = ?, notes = ?, field_multipliers = ? WHERE id = ?')
-      .run(played_at, duration_min || null, notes || null, field_multipliers ? JSON.stringify(field_multipliers) : null, id)
+    db.prepare('UPDATE plays SET played_at = ?, duration_min = ?, notes = ? WHERE id = ?')
+      .run(played_at, duration_min || null, notes || null, id)
     db.prepare('DELETE FROM play_players WHERE play_id = ?').run(id)
     db.prepare('DELETE FROM play_expansions WHERE play_id = ?').run(id)
     for (const p of players) {
